@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# VPNインタフェース(tun+)用iptablesルール削除関数
+delete() {
+    rule_number=`iptables -L $target --line-numbers -n -v|grep tun.|awk '{print $1}'|sort -r`
+    for num in $rule_number
+    do
+        iptables -D $target $num
+    done
+}
+
+# VPNインタフェース(tun+)用iptables受信ルール削除
+target='INPUT'
+delete
+
+# VPNインタフェース(tun+)用iptables転送ルール削除
+target='FORWARD'
+delete
+
+# VPNインタフェース(tun+)用iptables送信ルール削除
+target='OUTPUT'
+delete
