@@ -10,7 +10,7 @@ ret=0
 
 echo "Start web data backup" | $LOGGER
 
-/usr/bin/rsync -av --delete --exclude="/cache/" --exclude="/lost+found/" /data/ rsync://bksrv10/webdata/ | $LOGGER
+/usr/bin/rsync -av --delete --exclude="/cache/" --exclude="/lost+found/" /data/ rsync://bacsrv10/webdata/ | $LOGGER
 ret=$?
 
 if [ $ret -ne 0 ] ; then
