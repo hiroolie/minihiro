@@ -4,14 +4,14 @@
 LOGGER='/bin/logger -t NDBBKLOGCLEAR -i'
 
 # 
-node="ndbd10 ndbd20 ndbd30 ndbd40"
+node="dbdat10 dbdat20 dbdat30 dbdat40"
 rshcmd=/usr/bin/rsh
 
 # フラグファイル
 flgfile=/tmp/NDBBACKUP.flg
 
 # 実行コマンド
-execcmd='/usr/bin/find /var/lib/mysql-cluster/BACKUP -type d -mtime +1 -name "BACKUP-*" | xargs /bin/rm -rfv'
+execcmd='/usr/bin/find /var/lib/mysql-cluster/ndb_data/*/BACKUP -type d -mtime +1 -name "BACKUP-*" | xargs /bin/rm -rfv'
 
 # 
 echo "Run the delete log files that exceed the retention period." | $LOGGER
