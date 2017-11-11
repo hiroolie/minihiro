@@ -7,7 +7,7 @@ LOGGER='/bin/logger -t NDBBACKUP -i'
 flgfile=/tmp/NDBBACKUP.flg
 
 # バックアップ対象サーバ
-node="ndbd10 ndbd20 ndbd30 ndbd40"
+node="dbdat10 dbdat20 dbdat30 dbdat40"
 
 # 処理開始
 ret=0
@@ -19,7 +19,7 @@ if test -f $flgfile ; then
 	echo "フラグファイルが残っていたため削除しました。" | $LOGGER
 fi
 
-/usr/bin/ndb_mgm -e 'START BACKUP' | $LOGGER
+/usr/local/mysql/bin/ndb_mgm -e 'START BACKUP' | $LOGGER
 
 ret=$?
 
@@ -31,16 +31,16 @@ fi
 
 echo "Archive dir mount on bkupdir" | $LOGGER
 
-mount -t nfs bksrv10B:/remote/dbdata /export | $LOGGER
+mount -t nfs bacsrv10:/remote/dbdata /export | $LOGGER
 
 if [ -d /export/dbmg10 ] ; then
-
+	COUNT=1
 	for ii in ${node} 
 	do
 		echo "ndb data backup from ${ii}" | $LOGGER 
-		/usr/bin/rsync -av --delete root@${ii}:/var/lib/mysql-cluster/BACKUP/ /export/${ii}/ | $LOGGER
+		/usr/bin/rsync -av --delete root@${ii}:/var/lib/mysql-cluster/ndb_data/${COUNT}/BACKUP/ /export/${ii}/ | $LOGGER
 		ret=$?
-		
+		COUNT=$(( COUNT + 1 ))
 		if [ $ret != 0 ] ; then
 			logger -t NDBBACKUP "NDB data archive has occured Error ${ii}"
 			touch $flgfile
